@@ -20,7 +20,7 @@ class Mongo {
 
     function setCollection($collection) {
         $db = $this->db;
-        $this->collection = $this->mongo->$db->$collection; //test_main->floating;
+        $this->collection = $this->mongo->test_main->$collection; //test_main->floating;
     }
 
     function search($query, $limit = 10, $case_sensitive = false) {
