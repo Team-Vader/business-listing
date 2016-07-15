@@ -16,8 +16,8 @@ class Businesses {
         $port = $mongo_conf['port'];
         $this->db = $mongo_conf['db'];
         $this->mongo = new MongoDB\Client("mongodb://$host:27017");
-        $this->floating = $this->mongo->floatDB->$mongo_conf['fps']; //test_main->floating;
-        $this->rnr = $this->mongo->floatDB->$mongo_conf['rnr'];
+        $this->floating = $this->mongo->test_main->floatingpoints2;//$mongo_conf['fps']; //test_main->floating;
+        $this->rnr = $this->mongo->test_main->rnr;
         $this->places_url = $mongo_conf['places-url'];
     }
 
@@ -58,7 +58,7 @@ class Businesses {
 
     function getRnr($id, $name, $address, $lat, $lng) {
         $rnr = iterator_to_array( $this->rnr->find( array( 'bid' => $id ) ) );
-        if (count($rnr[0]) > 0) {
+        if (isset($rnr[0]) && count($rnr[0]) > 0) {
             if ( !isset($rnr[0]->rating)) return null;
             return $rnr[0];
         }
