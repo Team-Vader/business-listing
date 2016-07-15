@@ -48,7 +48,7 @@ class Businesses {
                 unset($result[$i]);
                 continue;
             }
-            $rnr = $this->getRnr($r->_id, $r->{'Name'}, $r->Address, $r->lat, $r->lng);
+            $rnr = $this->getRnr($r->Tag, $r->{'Name'}, $r->Address, $r->lat, $r->lng);
             if ($rnr == null) continue;
             $result[$i]->{'rating'} = isset($rnr->rating) ? $rnr->rating : null;
             $result[$i]->{'reviews'} = isset($rnr->reviews) ? $rnr->reviews : null;
@@ -56,15 +56,19 @@ class Businesses {
         return $result;
     }
 
-    function getRnr($id, $name, $address, $lat, $lng) {
-        $rnr = iterator_to_array( $this->rnr->find( array( 'bid' => $id ) ) );
+    function getRnr($tag, $name = null, $address = null, $lat = null, $lng = null) {
+        $rnr = iterator_to_array( $this->rnr->find( array( 'Tag' => $tag ) ) );
+
         if (isset($rnr[0]) && count($rnr[0]) > 0) {
             if ( !isset($rnr[0]->rating)) return null;
             return $rnr[0];
         }
 
+        if ($name == null) {
+            return null;
+        }
         $rnr = json_decode(self::google_places($name, $address, $lat, $lng));
-        $rnr->{'bid'} = $id;
+        $rnr->{'Tag'} = $tag;
         $this->rnr->insertOne( $rnr );
 
         if ( isset($rnr->rating) && $rnr->rating == null) return null;
