@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_WARNING ^ E_ALL);
+header('Content-type: application/json');
 if ($_SERVER["REQUEST_METHOD"] != 'GET') {
     header('HTTP/1.0 405 Method Not Allowed', true, 405);
     die;
@@ -7,7 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] != 'GET') {
 require_once "class.Mongo.php";
 
 $mongo = new Businesses();
-$mongo->setCollection("floating");
 
 $name = (isset($_GET["name"]) && $_GET['name']) ? $_GET['name'] : null;
 $city = (isset($_GET["city"]) && $_GET['city']) ? $_GET['city'] : null;
@@ -23,6 +23,5 @@ if ($name) {
     $search_query = array();
 }
 $results = $mongo->find($search_query, 10);
-
 echo json_encode($results);
 ?> 
