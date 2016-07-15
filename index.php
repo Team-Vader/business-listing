@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] != 'GET') {
 }
 require_once "class.Mongo.php";
 
-$mongo = new Mongo();
+$mongo = new Businesses();
 $mongo->setCollection("floating");
 
 $name = (isset($_GET["name"]) && $_GET['name']) ? $_GET['name'] : null;

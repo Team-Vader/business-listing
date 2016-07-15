@@ -3,7 +3,7 @@
 include 'vendor/autoload.php';
 use MongoDB\Driver\Manager;
 
-class Mongo {
+class Businesses {
 
     private $mongo;
     private $db;
@@ -29,21 +29,33 @@ class Mongo {
             $regex = $case_sensitive ? "/^$v/" : "/^$v/i";
             $q[$k] = array( '$regex' => $regex );
         }
-var_rump($q);
         return $this->find( $q, $limit );
     }
 
     function find($query = array(), $limit = 10) {
-        $result = $this->collection->find($query, ['limit' => $limit]);
+        $result = iterator_to_array( $this->collection->find($query, ['limit' => $limit]) );
         $result_list = array();
-        foreach ($result as $r) {
-            $result_list[] = array(
-                'id' => $r->_id->__toString(),
-                'name' => $r->{'Business Name'},
-                'category' => $r->Category,
-                'city' => $r->City
-            );
+        foreach ($result as $i => $r) {
+            //$rnr = $this->getRnR($r->_id, $r->{'Business Name'}, $r->{'Address'});
+            #$result_list[] = array(
+            #    'id' => $r->_id->__toString(),
+            #    'name' => $r->{'Business Name'},
+            #    'category' => $r->Category,
+            #    'city' => $r->City
+            #);
+            $result[$i]->{'id'} = $r->_id->__toString();
+            $result[$i]->{'name'} = $r->{'Business Name'};
+            $result[$i]->{'category'} = $r->{'Category'};
+            $result[$i]->{'city'} = $r->City;
         }
-        return $result_list;
+        return $result;
     }
+
+    function getRnr($id, $name, $address) {
+        $rnr = $this->mongo->test_main->rnr;
+
+        
+
+    }    
+
 }
