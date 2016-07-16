@@ -5,6 +5,8 @@ if ($_SERVER["REQUEST_METHOD"] != 'GET') {
     header('HTTP/1.0 405 Method Not Allowed', true, 405);
     die;
 }
+
+
 require_once "class.Mongo.php";
 
 $mongo = new Businesses();
@@ -18,10 +20,16 @@ if ($name) {
     if (!$case_sensitive) {
         $query_name['$options'] = "i";
     }
-    $search_query = array( "Business Name" => $query_name, "City" => $city);
+    $search_query = array( "Name" => $query_name, "City" => $city);
 } else {
     $search_query = array();
 }
+
+if (isset($_GET['tag'])) {
+    $tag = $_GET['tag'];
+    $search_query = array( "Tag" => $tag );
+}
+
 $results = $mongo->find($search_query, 10);
 echo json_encode($results);
 ?> 
