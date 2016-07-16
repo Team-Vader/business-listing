@@ -21,7 +21,10 @@ if ($query) {
         $query_name['$options'] = "i";
     }
     $query_cat = array ( '$regex' => $query, '$options' => "i" );
-    $search_query = array ( '$or' => array ( array ( 'Category' => $query_cat ), array( "Name" => $query_name, "City" => $city)) );
+    $search_query = array ( '$or' => array ( array ( 'Category' => $query_cat ), array( "Name" => $query_name )) );
+    if ($city) {
+        $search_query = array ( '$and' => array ($search_query, array ( 'City' => $city ) ) );
+    }
 } else {
     $search_query = array();
 }
