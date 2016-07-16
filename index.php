@@ -30,6 +30,6 @@ if (isset($_GET['tag'])) {
     $search_query = array( "Tag" => $tag );
 }
 
-$results = $mongo->find($search_query, 10);
+$results = $mongo->find($search_query, 20);
 echo json_encode($results);
 ?> 
