@@ -11,16 +11,17 @@ require_once "class.Mongo.php";
 
 $mongo = new Businesses();
 
-$name = (isset($_GET["name"]) && $_GET['name']) ? $_GET['name'] : null;
+$query = (isset($_GET["name"]) && $_GET['name']) ? $_GET['name'] : null;
 $city = (isset($_GET["city"]) && $_GET['city']) ? $_GET['city'] : null;
 $case_sensitive = (isset($_GET["i"]) && $_GET["i"] == 1) ? true : false;
 
-if ($name) {
-    $query_name = array ( '$regex' => "^$name" );
+if ($query) {
+    $query_name = array ( '$regex' => "^$query" );
     if (!$case_sensitive) {
         $query_name['$options'] = "i";
     }
-    $search_query = array( "Name" => $query_name, "City" => $city);
+    $query_cat = array ( '$regex' => $query, '$options' => "i" );
+    $search_query = array ( '$or' => array ( array ( 'Category' => $query_cat ), array( "Name" => $query_name, "City" => $city)) );
 } else {
     $search_query = array();
 }
