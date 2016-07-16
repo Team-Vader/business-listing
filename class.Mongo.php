@@ -33,26 +33,17 @@ class Businesses {
     function find($query = array(), $limit = 10) {
         $result = iterator_to_array( $this->floating->find($query, ['limit' => $limit]) );
         foreach ($result as $i => $r) {
-            //$rnr = $this->getRnR($r->_id, $r->{'Business Name'}, $r->{'Address'});
-            #$result_list[] = array(
-            #    'id' => $r->_id->__toString(),
-            #    'name' => $r->{'Business Name'},
-            #    'category' => $r->Category,
-            #    'city' => $r->City
-            #);
-            #$result[$i]->{'id'} = $r->_id;
-            #$result[$i]->{'name'} = $r->{'Name'};
-            #$result[$i]->{'category'} = $r->{'Category'};
-            #$result[$i]->{'city'} = $r->City;
             if ( !isset($r->Name) || !isset($r->Address) ) {
                 unset($result[$i]);
                 continue;
             }
             $rnr = $this->getRnr($r->Tag, $r->{'Name'}, $r->Address, $r->lat, $r->lng);
-            if ($rnr == null) continue;
-            $result[$i]->{'rating'} = isset($rnr->rating) ? $rnr->rating : null;
+            //if ($rnr == null) 
+            //    continue;
+            $result[$i]->{'rating'} = isset($rnr->rating) ? $rnr->rating : 0;
             $result[$i]->{'reviews'} = isset($rnr->reviews) ? $rnr->reviews : null;
         }
+        usort($result, 'cmp_rating');
         return $result;
     }
 
@@ -90,4 +81,13 @@ class Businesses {
         return $response;
     }
 
+}
+
+function cmp_rating($a, $b) {
+    if (!isset($a->rating) || !isset($b->rating)) 
+        return 0;
+    if ($a->rating == $b->rating) {
+        return 0;
+    }
+    return ($a->rating > $b->rating) ? -1 : 1;
 }
